@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.20.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: app
+  name: app
+spec:
+  selector:
+    matchLabels:
+      name: app
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.20.0 ()
+      creationTimestamp: null
+      labels:
+        io.kompose.service: app
+        name: app
+    spec:
+      containers:
+      - image: mohammadakram077/node-kubernetes:v3
+        name: application
+        env:
+        - name: "MYSQL_DATABASE"
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: mysql_db
+        - name: "MYSQL_HOST"
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: mysql_host
+        - name: "MYSQL_PASSWORD"
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: mysql_pwd
+        - name: "MYSQL_USER"
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: mysql_user
+        - name: "MYSQl_PORT"
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: mysql_port
+        - name: "PORT"
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: port
+        - name: "REDIS_HOST"
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: redis_host
+        - name: "REDIS_PORT"
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: redis_port
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+status: {}

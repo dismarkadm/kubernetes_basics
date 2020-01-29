@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.20.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: database
+  name: database
+spec:
+  selector:
+    matchLabels:
+      name: database
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.20.0 ()
+      creationTimestamp: null
+      labels:
+        io.kompose.service: database
+        name: database
+    spec:
+      containers:
+      - env:
+        - name: "DATABASE_HOST"
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: mysql_host
+        - name: "MYSQL_ALLOW_EMPTY_PASSWORD"
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: mysql_empty_pwd
+        - name: "MYSQL_DATABASE"
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: mysql_db
+        - name: "MYSQL_PASSWORD"
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: mysql_pwd
+        - name: "MYSQL_USER"
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: mysql_user
+        image: mohammadakram077/database-kubernetes
+        name: storage
+        ports:
+        - containerPort: 3306
+      restartPolicy: Always
+status: {}
